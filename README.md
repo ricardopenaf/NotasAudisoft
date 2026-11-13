@@ -64,7 +64,10 @@ La cadena de conexión está en `backend/NotasAudisoft.Api/appsettings.json`:
 }
 ```
 ### Crear la Base de datos 
-Cree la bd con el nombre de Notas
+1. Ingrese al Managment de sql server
+2. Cree la bd con el nombre de Notas
+
+## Nota sólo la bse de datos sin tablas
 
 Ajústela según su entorno.
 
