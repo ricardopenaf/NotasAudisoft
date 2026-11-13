@@ -41,10 +41,6 @@ La API se expone **únicamente por HTTP** (sin HTTPS), según lo solicitado.
 
 `NumeroIdentificacion` tiene una restricción `UNIQUE` a nivel de base de datos en ambas tablas. Además, la capa de negocio valida explícitamente la unicidad **antes** de insertar o actualizar (`EstudianteServicio`/`ProfesorServicio`), devolviendo un mensaje de error claro ("Ya existe un estudiante/profesor registrado con el número de identificación X.") en vez de dejar que falle la restricción de base de datos.
 
-### Nota sobre la base de datos
-
-El requerimiento menciona dos nombres distintos para la base de datos: el punto 1 pide una base llamada **`Notas`**, y el punto 2.h especifica una cadena de conexión con `Database=NotasAudisoft`. En el entorno de pruebas, el usuario `BDUsuario` **no tiene permiso `CREATE DATABASE`**, por lo que no es posible crear `NotasAudisoft` desde cero. Sí existe una base de datos `Notas` sobre la cual `BDUsuario` tiene control total. Por ello, **la aplicación se conecta a la base de datos `Notas`** (servidor `Neptuno`), y la cadena de conexión en `appsettings.json` refleja esa decisión. Si se dispone de una base `NotasAudisoft` vacía con permisos equivalentes, basta con ajustar la cadena de conexión y volver a ejecutar las migraciones.
-
 ### Resumen de notas (promedio por materia)
 
 El formulario de **Notas** solicita que la columna "Nota" muestre **el promedio de las notas de cada materia** para un estudiante, junto con botones **"Mostrar Notas"** (para ver el detalle de notas individuales que componen ese promedio) y **"Eliminar"** (para elegir, de ese detalle, cuál nota puntual eliminar).
