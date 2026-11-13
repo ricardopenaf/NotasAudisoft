@@ -1,0 +1,8 @@
+.contenedor-alertas {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1080;
+  min-width: 320px;
+  max-width: 420px;
+}

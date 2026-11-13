@@ -1,0 +1,18 @@
+# .NET
+backend/**/bin/
+backend/**/obj/
+
+# Angular / Node
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/.angular/
+
+# Editores / SO
+.vs/
+.vscode/
+*.user
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

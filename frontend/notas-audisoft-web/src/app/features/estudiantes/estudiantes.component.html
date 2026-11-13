@@ -1,0 +1,118 @@
+<h2 class="mb-4">Estudiantes</h2>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">{{ modoEdicion() ? 'Editar estudiante' : 'Nuevo estudiante' }}</h5>
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="row g-2 align-items-start">
+      <div class="col-md-5">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nombreEstudiante"
+          placeholder="Nombre del estudiante (solo letras y espacios)"
+          maxlength="150"
+        />
+        @if (formulario.controls.nombreEstudiante.touched && formulario.controls.nombreEstudiante.invalid) {
+          <div class="text-danger small mt-1">
+            @if (formulario.controls.nombreEstudiante.errors?.['requerido']) {
+              El nombre es obligatorio.
+            } @else if (formulario.controls.nombreEstudiante.errors?.['longitudMinima']) {
+              El nombre debe tener al menos 2 caracteres.
+            } @else {
+              El nombre solo puede contener letras y espacios, sin números ni caracteres especiales.
+            }
+          </div>
+        }
+      </div>
+      <div class="col-md-3">
+        <input
+          type="text"
+          inputmode="numeric"
+          class="form-control"
+          formControlName="numeroIdentificacion"
+          placeholder="Número de identificación"
+          maxlength="13"
+        />
+        @if (formulario.controls.numeroIdentificacion.touched && formulario.controls.numeroIdentificacion.invalid) {
+          <div class="text-danger small mt-1">
+            @if (formulario.controls.numeroIdentificacion.errors?.['requerido']) {
+              El número de identificación es obligatorio.
+            } @else if (formulario.controls.numeroIdentificacion.errors?.['patronNumerico']) {
+              El número de identificación solo puede contener dígitos.
+            } @else {
+              El número de identificación debe tener entre 4 y 13 dígitos.
+            }
+          </div>
+        }
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-primary me-2">{{ modoEdicion() ? 'Actualizar' : 'Crear' }}</button>
+        @if (modoEdicion()) {
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarEdicion()">Cancelar</button>
+        }
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">Listado de estudiantes</h5>
+  <input
+    type="search"
+    class="form-control w-auto"
+    placeholder="Buscar por nombre..."
+    [value]="busqueda()"
+    (input)="buscar($event)"
+  />
+</div>
+
+<table class="table table-striped align-middle">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nombre del estudiante</th>
+      <th>Número de identificación</th>
+      <th class="text-end">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (estudiante of estudiantes(); track estudiante.id) {
+      <tr>
+        <td>{{ estudiante.id }}</td>
+        <td>{{ estudiante.nombreEstudiante }}</td>
+        <td>{{ estudiante.numeroIdentificacion }}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="editar(estudiante)">Editar</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="confirmarEliminar(estudiante)">Eliminar</button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="4" class="text-center text-muted">No hay estudiantes registrados.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<app-paginador [paginaActual]="paginaActual()" [totalPaginas]="totalPaginas()" (cambiarPagina)="cargar($event)"></app-paginador>
+
+@if (estudianteAEliminar()) {
+  <div class="modal-backdrop show"></div>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar eliminación</h5>
+          <button type="button" class="btn-close" (click)="cancelarEliminar()"></button>
+        </div>
+        <div class="modal-body">
+          ¿Está seguro de eliminar al estudiante <strong>{{ estudianteAEliminar()?.nombreEstudiante }}</strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarEliminar()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminar()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

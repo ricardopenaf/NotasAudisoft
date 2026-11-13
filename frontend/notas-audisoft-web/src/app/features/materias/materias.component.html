@@ -1,0 +1,95 @@
+<h2 class="mb-4">Materias</h2>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">{{ modoEdicion() ? 'Editar materia' : 'Nueva materia' }}</h5>
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="row g-2 align-items-start">
+      <div class="col-md-8">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nombreMateria"
+          placeholder="Nombre de la materia (solo letras y espacios)"
+          maxlength="150"
+        />
+        @if (formulario.controls.nombreMateria.touched && formulario.controls.nombreMateria.invalid) {
+          <div class="text-danger small mt-1">
+            @if (formulario.controls.nombreMateria.errors?.['requerido']) {
+              El nombre es obligatorio.
+            } @else if (formulario.controls.nombreMateria.errors?.['longitudMinima']) {
+              El nombre debe tener al menos 2 caracteres.
+            } @else {
+              El nombre solo puede contener letras y espacios, sin números ni caracteres especiales.
+            }
+          </div>
+        }
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-primary me-2">{{ modoEdicion() ? 'Actualizar' : 'Crear' }}</button>
+        @if (modoEdicion()) {
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarEdicion()">Cancelar</button>
+        }
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">Listado de materias</h5>
+  <input
+    type="search"
+    class="form-control w-auto"
+    placeholder="Buscar por nombre..."
+    [value]="busqueda()"
+    (input)="buscar($event)"
+  />
+</div>
+
+<table class="table table-striped align-middle">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nombre de la materia</th>
+      <th class="text-end">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (materia of materias(); track materia.id) {
+      <tr>
+        <td>{{ materia.id }}</td>
+        <td>{{ materia.nombreMateria }}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="editar(materia)">Editar</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="confirmarEliminar(materia)">Eliminar</button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="3" class="text-center text-muted">No hay materias registradas.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<app-paginador [paginaActual]="paginaActual()" [totalPaginas]="totalPaginas()" (cambiarPagina)="cargar($event)"></app-paginador>
+
+@if (materiaAEliminar()) {
+  <div class="modal-backdrop show"></div>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar eliminación</h5>
+          <button type="button" class="btn-close" (click)="cancelarEliminar()"></button>
+        </div>
+        <div class="modal-body">
+          ¿Está seguro de eliminar la materia <strong>{{ materiaAEliminar()?.nombreMateria }}</strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarEliminar()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminar()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

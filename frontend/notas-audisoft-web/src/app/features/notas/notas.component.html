@@ -1,0 +1,179 @@
+<h2 class="mb-4">Notas</h2>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">{{ modoEdicion() ? 'Editar nota' : 'Nueva nota' }}</h5>
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="row g-2">
+      <div class="col-md-3">
+        <label class="form-label">Estudiante</label>
+        <select class="form-select" formControlName="idEstudiante">
+          <option [value]="0" disabled>Seleccione...</option>
+          @for (estudiante of estudiantes(); track estudiante.id) {
+            <option [value]="estudiante.id">{{ estudiante.nombreEstudiante }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Profesor</label>
+        <select class="form-select" formControlName="idProfesor">
+          <option [value]="0" disabled>Seleccione...</option>
+          @for (profesor of profesores(); track profesor.id) {
+            <option [value]="profesor.id">{{ profesor.nombreProfesor }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Materia</label>
+        <select class="form-select" formControlName="idMateria">
+          <option [value]="0" disabled>Seleccione...</option>
+          @for (materia of materias(); track materia.id) {
+            <option [value]="materia.id">{{ materia.nombreMateria }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Nota (0 a 5)</label>
+        <input type="number" class="form-control" formControlName="valorNota" min="0" max="5" step="0.1" />
+      </div>
+      <div class="col-md-1 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">{{ modoEdicion() ? 'Guardar' : 'Crear' }}</button>
+      </div>
+      @if (modoEdicion()) {
+        <div class="col-12">
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelarEdicion()">Cancelar edición</button>
+        </div>
+      }
+      @if (formulario.touched && formulario.invalid) {
+        <div class="col-12">
+          <div class="text-danger small mt-1">
+            Seleccione estudiante, profesor y materia, e ingrese una nota entre 0 y 5.
+          </div>
+        </div>
+      }
+    </form>
+  </div>
+</div>
+
+<h5 class="mb-3">Resumen de notas por estudiante y materia (promedio)</h5>
+
+<table class="table table-striped align-middle">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Estudiante</th>
+      <th>Profesor</th>
+      <th>Materia</th>
+      <th>Nota (promedio)</th>
+      <th class="text-end">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (fila of resumen(); track fila.idEstudiante + '-' + fila.idMateria; let indice = $index) {
+      <tr>
+        <td>{{ indice + 1 }}</td>
+        <td>{{ fila.nombreEstudiante }}</td>
+        <td>{{ fila.nombreProfesor }}</td>
+        <td>{{ fila.nombreMateria }}</td>
+        <td>{{ fila.promedioNota }}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-info me-2" (click)="mostrarNotas(fila)">Mostrar Notas</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="abrirEliminar(fila)">Eliminar</button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="6" class="text-center text-muted">No hay notas registradas.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<app-paginador [paginaActual]="paginaActual()" [totalPaginas]="totalPaginas()" (cambiarPagina)="cargar($event)"></app-paginador>
+
+@if (filaConsultada()) {
+  <div class="modal-backdrop show"></div>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Notas de {{ filaConsultada()?.nombreEstudiante }} en {{ filaConsultada()?.nombreMateria }}
+          </h5>
+          <button type="button" class="btn-close" (click)="cerrarMostrarNotas()"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Profesor</th>
+                <th>Nota</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (nota of notasDeLaFila(); track nota.id) {
+                <tr>
+                  <td>{{ nota.id }}</td>
+                  <td>{{ nota.nombreProfesor }}</td>
+                  <td>{{ nota.valorNota }}</td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarDesdeModal(nota)">Editar</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="text-center text-muted">No hay notas registradas.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="cerrarMostrarNotas()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (filaAEliminar()) {
+  <div class="modal-backdrop show"></div>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Eliminar nota de {{ filaAEliminar()?.nombreEstudiante }} en {{ filaAEliminar()?.nombreMateria }}
+          </h5>
+          <button type="button" class="btn-close" (click)="cerrarEliminar()"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted">Seleccione la nota específica que desea eliminar:</p>
+          @for (nota of notasParaEliminar(); track nota.id) {
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="notaAEliminar"
+                [id]="'nota-' + nota.id"
+                [value]="nota.id"
+                [checked]="notaSeleccionadaParaEliminar() === nota.id"
+                (change)="notaSeleccionadaParaEliminar.set(nota.id)"
+              />
+              <label class="form-check-label" [for]="'nota-' + nota.id">
+                Nota Id {{ nota.id }} — Profesor: {{ nota.nombreProfesor }} — Valor: {{ nota.valorNota }}
+              </label>
+            </div>
+          } @empty {
+            <p class="text-center text-muted">No hay notas registradas.</p>
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="cerrarEliminar()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminarSeleccionada()">Eliminar seleccionada</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

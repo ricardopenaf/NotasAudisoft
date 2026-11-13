@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="NotasAudisoft.Api/NotasAudisoft.Api.csproj" />
+  <Project Path="NotasAudisoft.Datos/NotasAudisoft.Datos.csproj" />
+  <Project Path="NotasAudisoft.Entidades/NotasAudisoft.Entidades.csproj" />
+  <Project Path="NotasAudisoft.Negocio/NotasAudisoft.Negocio.csproj" />
+  <Project Path="NotasAudisoft.Tests/NotasAudisoft.Tests.csproj" />
+</Solution>

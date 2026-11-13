@@ -1,0 +1,6 @@
+@NotasAudisoft.Api_HostAddress = http://localhost:5005
+
+GET {{NotasAudisoft.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
