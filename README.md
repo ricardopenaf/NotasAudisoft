@@ -1,4 +1,4 @@
-# Sistema de Notas — Audisoft
+# Sistema de Notas - Audisoft
 
 Aplicación full-stack para la gestión de **Estudiantes**, **Profesores**, **Materias** y **Notas**, desarrollada como prueba técnica.
 
@@ -108,7 +108,7 @@ Las pruebas usan el proveedor InMemory de EF Core y cubren, entre otros casos:
 
 Todos los listados son paginados (`pagina`, `tamanoPagina`) y los de Estudiante/Profesor/Materia aceptan `busqueda` para filtrar por nombre.
 
-## Puesta en marcha — Frontend
+## Puesta en marcha - Frontend
 
 ### Requisitos
 
