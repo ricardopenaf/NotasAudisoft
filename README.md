@@ -63,7 +63,9 @@ La cadena de conexión está en `backend/NotasAudisoft.Api/appsettings.json`:
   "NotasDbConnection": "Server=Neptuno;Database=Notas;User Id=BDUsuario;Password=12345;TrustServerCertificate=True;MultipleActiveResultSets=true"
 }
 ```
-### Cree la Base de datos con el nombre de Notas
+### Crear la Base de datos 
+Cree la bd con el nombre de Notas
+
 Ajústela según su entorno.
 
 ### Migraciones (con datos semilla)
