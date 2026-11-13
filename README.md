@@ -43,7 +43,7 @@ La API se expone **únicamente por HTTP** (sin HTTPS), según lo solicitado.
 
 ### Resumen de notas (promedio por materia)
 
-El formulario de **Notas** solicita que la columna "Nota" muestre **el promedio de las notas de cada materia** para un estudiante, junto con botones **"Mostrar Notas"** (para ver el detalle de notas individuales que componen ese promedio) y **"Eliminar"** (para elegir, de ese detalle, cuál nota puntual eliminar).
+El formulario de **Notas** en la columna "Nota" se muestra **el promedio de las notas de cada materia** para un estudiante, junto con botones **"Mostrar Notas"** (para ver el detalle de notas individuales que componen ese promedio) y **"Eliminar"** (para elegir, de ese detalle, cuál nota puntual eliminar).
 
 Como una tabla `Nota` puede tener varias filas para la misma combinación Estudiante + Materia (distintos profesores o distintas evaluaciones), la vista principal de Notas (`GET /api/notas/resumen`) **agrupa las notas por `Estudiante + Materia`** y calcula el promedio (`PromedioNota`) y la cantidad de notas (`CantidadNotas`). La columna `Id` de esa tabla resumen es un número de fila consecutivo (no corresponde al `Id` de una fila física de `Nota`, ya que una fila del resumen puede representar varias notas). El `Id` real de cada nota individual sí se muestra en los modales "Mostrar Notas" y "Eliminar".
 
